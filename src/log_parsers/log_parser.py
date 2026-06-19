@@ -25,8 +25,12 @@ class LogParser:
         self.line_separator = line_separator
         self.dimensions = dimensions
 
-    def parse_file(self, file_path: str | Path) -> dict[DimensionName, dict[str, int]]:
-        """Yield one list of fields per non-empty line in the file.
+    def parse_file(self, file_path: str | Path) -> dict[DimensionName, dict[str, float]]:
+        """Return, per dimension, the percentage breakdown of its values.
+
+        Each dimension is reported separately: a value's percentage is its share
+        of that dimension's own total occurrences, rounded to two decimal places
+        and ordered by frequency descending.
 
         Raises ValueError if a row's field count differs from the expected width
         (the first row's width when not set explicitly), since the log is
@@ -49,4 +53,21 @@ class LogParser:
                         dimension_values_counter[dimension_name][dimension_value] += 1
                     else:
                         print(f"Extractor of {dimension_name} failed to find value for {line}")
-        return dimension_values_counter
+        return self._to_percentages(dimension_values_counter)
+
+    def _to_percentages(
+        self, dimension_values_counter: dict[DimensionName, dict[str, int]]
+    ) -> dict[DimensionName, dict[str, float]]:
+        """Convert absolute occurrence counts into per-dimension percentages.
+
+        Percentages within a dimension are computed against that dimension's own
+        total, rounded to two decimals and ordered by frequency descending.
+        """
+        dimension_values_percentages: dict[DimensionName, dict[str, float]] = {}
+        for dimension_name, value_counts in dimension_values_counter.items():
+            total = sum(value_counts.values())
+            dimension_values_percentages[dimension_name] = {
+                value: round(count / total * 100, 2)
+                for value, count in sorted(value_counts.items(), key=lambda item: item[1], reverse=True)
+            }
+        return dimension_values_percentages
