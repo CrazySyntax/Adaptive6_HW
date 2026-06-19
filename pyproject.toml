@@ -8,4 +8,5 @@ dependencies = [
     "geonamescache>=3.0.1",
     "pydantic>=2.13.4",
     "python-dotenv>=1.2.2",
+    "ua-parser>=1.0.2",
 ]
