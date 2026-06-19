@@ -10,7 +10,7 @@ def main():
     g = GeoLite2Database()
     print(g.get_country_name_from_ip("83.149.9.216"))
     res = LogParser(ApacheLogLineSeparator(), {DimensionName.COUNTRY: GeoIpExtractor(g)} ).parse_file("./resources/apache_log.txt")
-    print("end")
+    print(res)
 
 if __name__ == "__main__":
     main()

@@ -39,11 +39,19 @@ class GeoLite2Database(GeoIPDatabase):
     def get_country_name_from_ip(self, ip_address: str) -> str | None:
         """Return the country name for ``ip_address``, or None if unresolved.
 
-        The CSV is loaded once on first call and cached. NOTE: this scans every
-        network (O(n) per lookup); the GeoLite2 CSV has ~583K rows, so a
-        longest-prefix lookup structure is still needed before this is used at
-        scale (see CLAUDE.md).
+        Looks first in ``_network_octet_to_country``: the IP's first two octets
+        narrow the search to the small set of prefix>=16 networks sharing those
+        octets. Only if that misses do we fall back to the flat
+        ``_network_to_country`` map (prefix<16 networks, which span multiple
+        octet groups and so cannot be octet-indexed).
         """
+        octets = ip_address.split(".")
+        if len(octets) >= 2:
+            candidates = self._network_octet_to_country.get(octets[0], {}).get(octets[1], {})
+            for network, country in candidates.items():
+                if self.ip_matches_network(ip_address, network):
+                    return country
+
         for network, country in self._network_to_country.items():
             if self.ip_matches_network(ip_address, network):
                 return country
