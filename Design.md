@@ -48,6 +48,8 @@ Counts and reports. Responsibilities:
 - summarizes the numbers from all workers, calculating totals and percentages
 - print the results to output
 
+### 6. Database Reader
+
 ---
 
 ## Technology Choices & Rationale
