@@ -1,4 +1,3 @@
-from src.dimensions.enums import DimensionName
 from src.dimensions.geo_ip_extractor import GeoIpExtractor
 from src.line_separators.apache_log_line_separator import ApacheLogLineSeparator
 from src.log_parsers.log_parser import LogParser
@@ -9,7 +8,7 @@ def main():
     print("Hello from adaptive6-hw!")
     g = GeoLite2Database()
     print(g.get_country_name_from_ip("83.149.9.216"))
-    res = LogParser(ApacheLogLineSeparator(), {DimensionName.COUNTRY: GeoIpExtractor(g)} ).parse_file("./resources/apache_log.txt")
+    res = LogParser(ApacheLogLineSeparator(), [GeoIpExtractor(g)]).parse_file("./resources/apache_log.txt")
     print(res)
 
 if __name__ == "__main__":

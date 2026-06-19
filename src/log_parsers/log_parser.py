@@ -21,9 +21,9 @@ from src.line_separators.log_line_separator import LogLineSeparator
 class LogParser:
     """Tokenizes log lines into equal-width rows of string fields."""
 
-    def __init__(self, line_separator: LogLineSeparator, dimensions: dict[DimensionName, DimensionExtractor]) -> None:
+    def __init__(self, line_separator: LogLineSeparator, extractors: list[DimensionExtractor]) -> None:
         self.line_separator = line_separator
-        self.dimensions = dimensions
+        self.extractors = extractors
 
     def parse_file(self, file_path: str | Path) -> dict[DimensionName, dict[str, float]]:
         """Return, per dimension, the percentage breakdown of its values.
@@ -47,12 +47,13 @@ class LogParser:
                 if not line:
                     continue
                 fields = self.line_separator.parse_line(line)
-                for dimension_name, extractor in self.dimensions.items():
-                    dimension_value = extractor.extract(fields)
-                    if dimension_value is not None:
-                        dimension_values_counter[dimension_name][dimension_value] += 1
+                for extractor in self.extractors:
+                    dimension_values = extractor.extract(fields)
+                    if dimension_values is not None:
+                        for dimension_name, dimension_value in dimension_values.items():
+                            dimension_values_counter[dimension_name][dimension_value] += 1
                     else:
-                        print(f"Extractor of {dimension_name} failed to find value for {line}")
+                        print(f"{type(extractor).__name__} failed to find a value for {line}")
         return self._to_percentages(dimension_values_counter)
 
     def _to_percentages(
