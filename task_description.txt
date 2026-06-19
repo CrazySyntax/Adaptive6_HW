@@ -1,0 +1,59 @@
+Adaptive6 R&D
+Statistical Reporting Module - Home Assignment
+The Task
+Build a module that reads an Apache web server log file and produces a statistical report. The report should show what percentage of requests came from each of the following dimensions: Country, OS, and Browser.
+Understanding the Data
+Each line in an Apache log represents one HTTP request to a web server. Here's an example line:
+83.149.9.216 - - [17/May/2015:10:05:03 +0000] "GET /presentations/logstash.pdf HTTP/1.1" 200 3478 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36"
+Your output should show the percentage breakdown by Country, OS, and Browser across all 10,000 requests. See the Resources section for tools that can help with IP geolocation and User-Agent parsing.
+Time Expectations
+This assignment should take approximately 4 hours total. Please complete both phases in one sitting.
+Phase 1: Technical Design (~1 hour)
+Deliverable: A design document (PDF, Word, or Markdown) describing your solution architecture.
+Your design should cover:
+•	High-level architecture and component breakdown
+•	Key abstractions and interfaces
+•	How you will handle extensibility (adding new dimensions, output formats, etc.)
+•	Technology choices and rationale
+•	Any trade-offs or assumptions
+This shouldn't be a 20-page architecture doc. A simple diagram, your key abstractions, and how you'd extend it - that's enough.
+AI Usage: You may use AI to clarify unfamiliar concepts or check syntax. The design decisions, structure, and written content must be your own. We will ask you to walk through your reasoning in the review.
+Submission: Proceed to Phase 2 and submit both deliverables via a single GitHub link when complete.
+Phase 2: Implementation (~3 hours)
+Deliverable: Working code that implements your design.
+You may use any programming language and IDE. Note that the emphasis is on design, so choose a language where you can demonstrate good design patterns.
+AI Usage: You may use AI freely for code completion, debugging, and implementation assistance. You are expected to understand and be able to explain all the code you submit.
+Submission: Submit your design document and code via a single GitHub link when complete.
+Requirements (by priority)
+1.	Working solution: Your code must run and produce output.
+2.	Design for extensibility: You will be asked to explain how you would add new dimensions or other requirements.
+3.	Output format: Each metric reported separately, sorted by frequency (descending), with two decimal places.
+Resources
+Apache Log File (10K lines):
+https://www.dropbox.com/s/xs47xk59p7mgkbz/apache_log.txt?dl=0
+GeoIP Database (IP → Country):
+MaxMind GeoLite2 - free signup required: https://www.maxmind.com/en/geolite2/signup
+Important: Use the downloadable database, NOT the web API (you will be rate-limited).
+User-Agent Parsing (User-Agent → OS + Browser):
+Find an appropriate library for your chosen language (e.g. ua-parser, browsercap, etc.)
+Sample Output Format
+Country:
+United States 35.10%
+United Kingdom 27.55%
+Ukraine 20.33%
+China 10.34%
+Bolivia 4.38%
+Other 2.30%
+OS:
+Windows 64.36%
+Mac OS 22.15%
+Linux 12.38%
+Unknown 1.11%
+Browser:
+Chrome 35.45%
+Safari 29.28%
+Edge 23.17%
+Unknown 12.10%
+Tips
+•	Read this document carefully before starting - pay attention to output format requirements.
+•	If you have questions, ask - we're happy to clarify.
