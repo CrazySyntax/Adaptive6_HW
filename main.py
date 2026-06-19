@@ -1,6 +1,8 @@
 from src.cli_parser import CLIParser
+from src.dimensions.enums import DimensionName
 from src.dimensions.geo_ip_extractor import GeoIpExtractor
 from src.dimensions.user_agent_extractor import UserAgentExtractor
+from src.displayer import display
 from src.line_separators.apache_log_line_separator import ApacheLogLineSeparator
 from src.log_parsers.log_parser import LogParser
 from src.repositories.geoip_databases.geolite2_database import GeoLite2Database
@@ -17,14 +19,13 @@ def main():
     match log_type.lower():
         case "apache":
             geolite_database = GeoLite2Database()
-            res = LogParser(
+            results: dict[DimensionName, dict[str, float]] = LogParser(
                 ApacheLogLineSeparator(),
                 [GeoIpExtractor(geolite_database), UserAgentExtractor()],
             ).parse_file(cli_arguments.file_path)
-            print(res)
+            display(results)
         case _:
             raise ValueError(f"Unsupported log type: {log_type}")
-
 
 
 if __name__ == "__main__":
